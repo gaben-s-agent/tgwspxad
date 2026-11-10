@@ -115,17 +115,17 @@ chmod +x "$PREFIX/bin/tgws-start" "$PREFIX/bin/tgws-stop"
 
 mkdir -p "$HOME/.shortcuts"
 
-cat > "$HOME/.shortcuts/Proxy-Start" <<'EOF'
+cat > "$HOME/.shortcuts/tgws-start" <<'EOF'
 #!/data/data/com.termux/files/usr/bin/bash
-proxy-start
+tgws-start
 EOF
 
-cat > "$HOME/.shortcuts/Proxy-Stop" <<'EOF'
+cat > "$HOME/.shortcuts/tgws-stop" <<'EOF'
 #!/data/data/com.termux/files/usr/bin/bash
-proxy-stop
+tgws-stop
 EOF
 
-chmod +x "$HOME/.shortcuts/Proxy-Start" "$HOME/.shortcuts/Proxy-Stop"
+chmod +x "$HOME/.shortcuts/tgws-start" "$HOME/.shortcuts/tgws-stop"
 
 echo ""
 echo "=================================="
