@@ -50,7 +50,13 @@ fi
 cat > "$PREFIX/bin/tgws-start" <<'EOF'
 #!/data/data/com.termux/files/usr/bin/bash
 
+DIR="$HOME/tgws"
+VENV="$DIR/venv"
 PYTHON="$VENV/bin/python"
+SCRIPT="$DIR/proxy/tg_ws_proxy.py"
+PIDFILE="$HOME/tgws.pid"
+LOGFILE="$HOME/tgws.log"
+SECRETFILE="$HOME/tgws.secret"
 
 if [ ! -f "$SCRIPT" ]; then
     echo "Proxy script not found: $SCRIPT"
