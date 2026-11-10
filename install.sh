@@ -20,8 +20,8 @@ python -c "import pyexpat" || {
 }
 
 # Загрузка проекта
-if [ ! -d "$HOME/tg-ws-proxy" ]; then
-    git clone https://github.com/Flowseal/tg-ws-proxy.git "$HOME/tg-ws-proxy"
+if [ ! -d "$DIR" ]; then
+    git clone https://github.com/Flowseal/tg-ws-proxy.git "$DIR"
 fi
 
 DIR="$HOME/tg-ws-proxy"
@@ -37,21 +37,21 @@ python -m venv --system-site-packages "$VENV"
 "$VENV/bin/python" -c "import httpx, certifi"
 
 # Создание Secret, если его ещё нет
-if [ ! -f "$HOME/tg-ws-proxy.secret" ]; then
-    openssl rand -hex 16 > "$HOME/tg-ws-proxy.secret"
-    chmod 600 "$HOME/tg-ws-proxy.secret"
+if [ ! -f "$SECRETFILE" ]; then
+    openssl rand -hex 16 > "$SECRETFILE"
+    chmod 600 "$SECRETFILE"
 fi
 
 # Команда запуска
 cat > "$PREFIX/bin/tgws-start" <<'EOF'
 #!/data/data/com.termux/files/usr/bin/bash
 
-DIR="$HOME/tg-ws-proxy"
+DIR="$HOME/tgws"
 PYTHON="$DIR/venv/bin/python"
-SCRIPT="$DIR/tgws/tg_ws_proxy.py"
-PIDFILE="$HOME/tg-ws-proxy.pid"
-LOGFILE="$HOME/tg-ws-proxy.log"
-SECRET=$(cat "$HOME/tg-ws-proxy.secret")
+SCRIPT="$DIR/proxy/tg_ws_proxy.py"
+PIDFILE="$HOME/tgws.pid"
+LOGFILE="$HOME/tgws.log"
+SECRET=$(cat "$HOME/tgws.secret")
 
 if [ -f "$PIDFILE" ]; then
     PID=$(cat "$PIDFILE")
@@ -90,8 +90,8 @@ EOF
 cat > "$PREFIX/bin/tgws-stop" <<'EOF'
 #!/data/data/com.termux/files/usr/bin/bash
 
-PIDFILE="$HOME/tg-ws-proxy.pid"
-SCRIPT="$HOME/tg-ws-proxy/proxy/tg_ws_proxy.py"
+PIDFILE="$HOME/tgws.pid"
+SCRIPT="$HOME/tgws/proxy/tg_ws_proxy.py"
 
 if [ ! -f "$PIDFILE" ]; then
     echo "Proxy is not running"
@@ -117,8 +117,8 @@ cat > "$PREFIX/bin/tgws-uninstall" <<'EOF'
 
 echo "Stopping proxy..."
 
-PIDFILE="$HOME/tg-ws-proxy.pid"
-SCRIPT="$HOME/tg-ws-proxy/proxy/tg_ws_proxy.py"
+PIDFILE="$HOME/tgws.pid"
+SCRIPT="$HOME/tgws/proxy/tg_ws_proxy.py"
 
 if [ -f "$PIDFILE" ]; then
     PID=$(cat "$PIDFILE")
@@ -137,10 +137,10 @@ termux-wake-unlock 2>/dev/null || true
 
 echo "Removing proxy files..."
 
-rm -rf "$HOME/tg-ws-proxy"
-rm -f "$HOME/tg-ws-proxy.secret"
-rm -f "$HOME/tg-ws-proxy.pid"
-rm -f "$HOME/tg-ws-proxy.log"
+rm -rf "$HOME/tgws"
+rm -f "$HOME/tgws.secret"
+rm -f "$HOME/tgws.pid"
+rm -f "$HOME/tgws.log"
 
 # Удаление ярлыков Termux:Widget
 rm -f "$HOME/.shortcuts/tgws-start"
