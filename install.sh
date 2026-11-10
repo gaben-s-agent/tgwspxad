@@ -31,9 +31,6 @@ if [ ! -d "$DIR" ]; then
     git clone https://github.com/Flowseal/tg-ws-proxy.git "$DIR"
 fi
 
-DIR="$HOME/tg-ws-proxy"
-VENV="$DIR/venv"
-
 # Создание виртуального окружения
 python -m venv --system-site-packages "$VENV"
 
@@ -53,10 +50,30 @@ fi
 cat > "$PREFIX/bin/tgws-start" <<'EOF'
 #!/data/data/com.termux/files/usr/bin/bash
 
+PYTHON="$VENV/bin/python"
+
+if [ ! -f "$SCRIPT" ]; then
+    echo "Proxy script not found: $SCRIPT"
+    exit 1
+fi
+
+if [ ! -x "$PYTHON" ]; then
+    echo "Python environment not found: $PYTHON"
+    exit 1
+fi
+
+if [ ! -f "$SECRETFILE" ]; then
+    echo "Secret file not found: $SECRETFILE"
+    exit 1
+fi
+
+SECRET=$(cat "$SECRETFILE")
+
 if [ -f "$PIDFILE" ]; then
     PID=$(cat "$PIDFILE")
     if kill -0 "$PID" 2>/dev/null && ps -p "$PID" -o args= | grep -Fq "$SCRIPT"; then
         echo "Proxy is already running"
+        echo "tg://proxy?server=127.0.0.1&port=1443&secret=dd${SECRET}"
         exit 0
     fi
     rm -f "$PIDFILE"
