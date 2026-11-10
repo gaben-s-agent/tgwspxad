@@ -113,6 +113,20 @@ EOF
 
 chmod +x "$PREFIX/bin/tgws-start" "$PREFIX/bin/tgws-stop"
 
+mkdir -p "$HOME/.shortcuts"
+
+cat > "$HOME/.shortcuts/Proxy-Start" <<'EOF'
+#!/data/data/com.termux/files/usr/bin/bash
+proxy-start
+EOF
+
+cat > "$HOME/.shortcuts/Proxy-Stop" <<'EOF'
+#!/data/data/com.termux/files/usr/bin/bash
+proxy-stop
+EOF
+
+chmod +x "$HOME/.shortcuts/Proxy-Start" "$HOME/.shortcuts/Proxy-Stop"
+
 echo ""
 echo "=================================="
 echo "       INSTALLATION COMPLETE"
