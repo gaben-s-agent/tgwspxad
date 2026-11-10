@@ -5,6 +5,13 @@ trap 'echo ""; echo "ОШИБКА установки. Этап: $BASH_COMMAND"; 
 
 echo "=== Telegram WS Proxy Installer ==="
 
+DIR="$HOME/tgws"
+VENV="$DIR/venv"
+PIDFILE="$HOME/tgws.pid"
+LOGFILE="$HOME/tgws.log"
+SECRETFILE="$HOME/tgws.secret"
+SCRIPT="$DIR/proxy/tg_ws_proxy.py"
+
 # Обновление системы
 pkg update -y
 pkg upgrade -y
@@ -45,13 +52,6 @@ fi
 # Команда запуска
 cat > "$PREFIX/bin/tgws-start" <<'EOF'
 #!/data/data/com.termux/files/usr/bin/bash
-
-DIR="$HOME/tgws"
-PYTHON="$DIR/venv/bin/python"
-SCRIPT="$DIR/proxy/tg_ws_proxy.py"
-PIDFILE="$HOME/tgws.pid"
-LOGFILE="$HOME/tgws.log"
-SECRET=$(cat "$HOME/tgws.secret")
 
 if [ -f "$PIDFILE" ]; then
     PID=$(cat "$PIDFILE")
