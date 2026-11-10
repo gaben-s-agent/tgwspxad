@@ -48,7 +48,7 @@ cat > "$PREFIX/bin/tgws-start" <<'EOF'
 
 DIR="$HOME/tg-ws-proxy"
 PYTHON="$DIR/venv/bin/python"
-SCRIPT="$DIR/proxy/tg_ws_proxy.py"
+SCRIPT="$DIR/tgws/tg_ws_proxy.py"
 PIDFILE="$HOME/tg-ws-proxy.pid"
 LOGFILE="$HOME/tg-ws-proxy.log"
 SECRET=$(cat "$HOME/tg-ws-proxy.secret")
