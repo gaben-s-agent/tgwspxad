@@ -161,9 +161,20 @@ chmod +x "$PREFIX/bin/tgws-start" "$PREFIX/bin/tgws-stop" "$PREFIX/bin/tgws-unin
 
 mkdir -p "$HOME/.shortcuts"
 
-cat > "$HOME/.shortcuts/tgws-start" <<'EOF'
+cat > ~/.shortcuts/tgws-start <<'EOF'
 #!/data/data/com.termux/files/usr/bin/bash
-tgws-start
+
+# Запуск прокси
+tgws-start || exit 1
+
+# Получение Secret
+SECRET=$(cat "$HOME/tgws.secret")
+
+# Формирование ссылки
+LINK="tg://proxy?server=127.0.0.1&port=1443&secret=dd${SECRET}"
+
+# Открытие Telegram
+termux-open-url "$LINK"
 EOF
 
 cat > "$HOME/.shortcuts/tgws-stop" <<'EOF'
