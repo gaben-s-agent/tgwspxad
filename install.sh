@@ -111,7 +111,53 @@ rm -f "$PIDFILE"
 termux-wake-unlock
 EOF
 
-chmod +x "$PREFIX/bin/tgws-start" "$PREFIX/bin/tgws-stop"
+# Команда полного удаления
+cat > "$PREFIX/bin/tgws-uninstall" <<'EOF'
+#!/data/data/com.termux/files/usr/bin/bash
+
+echo "Stopping proxy..."
+
+PIDFILE="$HOME/tg-ws-proxy.pid"
+SCRIPT="$HOME/tg-ws-proxy/proxy/tg_ws_proxy.py"
+
+if [ -f "$PIDFILE" ]; then
+    PID=$(cat "$PIDFILE")
+
+    if kill -0 "$PID" 2>/dev/null && ps -p "$PID" -o args= | grep -Fq "$SCRIPT"; then
+        kill "$PID"
+        sleep 2
+
+        if kill -0 "$PID" 2>/dev/null; then
+            kill -9 "$PID" 2>/dev/null || true
+        fi
+    fi
+fi
+
+termux-wake-unlock 2>/dev/null || true
+
+echo "Removing proxy files..."
+
+rm -rf "$HOME/tg-ws-proxy"
+rm -f "$HOME/tg-ws-proxy.secret"
+rm -f "$HOME/tg-ws-proxy.pid"
+rm -f "$HOME/tg-ws-proxy.log"
+
+# Удаление ярлыков Termux:Widget
+rm -f "$HOME/.shortcuts/tgws-start"
+rm -f "$HOME/.shortcuts/tgws-stop"
+
+# Удаление команд
+rm -f "$PREFIX/bin/tgws-start"
+rm -f "$PREFIX/bin/tgws-stop"
+rm -f "$PREFIX/bin/tgws-uninstall"
+
+echo ""
+echo "================================"
+echo "       UNINSTALL COMPLETE"
+echo "================================"
+EOF
+
+chmod +x "$PREFIX/bin/tgws-start" "$PREFIX/bin/tgws-stop" "$PREFIX/bin/tgws-uninstall"
 
 mkdir -p "$HOME/.shortcuts"
 
@@ -133,4 +179,5 @@ echo "       INSTALLATION COMPLETE"
 echo "=================================="
 echo "Start: tgws-start"
 echo "Stop:  tgws-stop"
+echo "Uninstall: tgws-uninstall"
 echo "=================================="
