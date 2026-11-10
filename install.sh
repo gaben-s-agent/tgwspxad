@@ -191,7 +191,7 @@ cat > ~/.shortcuts/tgws-start <<'EOF'
 tgws-start || exit 1
 
 # Получение Secret
-SECRET=$(cat "$HOME/tg-ws-proxy.secret")
+SECRET=$(cat "$HOME/tgws.secret")
 
 # Формирование ссылки
 LINK="tg://proxy?server=127.0.0.1&port=1443&secret=dd${SECRET}"
