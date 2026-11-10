@@ -17,18 +17,7 @@ pkg update -y
 pkg upgrade -y
 
 # Системные зависимости
-pkg install -y git python python-pip openssl termux-tools libexpat
-
-# Проверка доступности OpenSSL
-if ! command -v openssl >/dev/null 2>&1; then
-    echo "OpenSSL не найден. Повторная установка..."
-    pkg reinstall -y openssl
-fi
-
-if ! command -v openssl >/dev/null 2>&1; then
-    echo "ОШИБКА: OpenSSL недоступен."
-    exit 1
-fi
+pkg install -y git python python-pip termux-tools libexpat
 
 # Проверка Python и Expat
 python -c "import pyexpat" || {
@@ -54,7 +43,7 @@ python -m venv --system-site-packages "$VENV"
 # Создание Secret, если его ещё нет
 if [ ! -s "$SECRETFILE" ]; then
     echo "Generating proxy secret..."
-    openssl rand -hex 16 > "$SECRETFILE"
+    python -c "import secrets; print(secrets.token_hex(16))" > "$SECRETFILE"
     chmod 600 "$SECRETFILE"
 fi
 
