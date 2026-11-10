@@ -187,22 +187,34 @@ mkdir -p "$HOME/.shortcuts"
 cat > ~/.shortcuts/tgws-start <<'EOF'
 #!/data/data/com.termux/files/usr/bin/bash
 
-# Запуск прокси
-tgws-start || exit 1
+if ! tgws-start; then
+    echo ""
+    echo "Ошибка запуска прокси."
+    read -r -p "Нажмите Enter, чтобы закрыть сессию..."
+    exit 1
+fi
 
-# Получение Secret
-SECRET=$(cat "$HOME/tgws.secret")
+SECRET=$(cat "$HOME/tgws.secret") || {
+    echo "Не удалось прочитать Secret."
+    read -r -p "Нажмите Enter, чтобы закрыть сессию..."
+    exit 1
+}
 
-# Формирование ссылки
 LINK="tg://proxy?server=127.0.0.1&port=1443&secret=dd${SECRET}"
 
-# Открытие Telegram
-termux-open-url "$LINK"
+if ! termux-open-url "$LINK"; then
+    echo "Не удалось открыть Telegram."
+    read -r -p "Нажмите Enter, чтобы закрыть сессию..."
+    exit 1
+fi
+
+exit 0
 EOF
 
 cat > "$HOME/.shortcuts/tgws-stop" <<'EOF'
 #!/data/data/com.termux/files/usr/bin/bash
 tgws-stop
+exit
 EOF
 
 chmod +x "$HOME/.shortcuts/tgws-start" "$HOME/.shortcuts/tgws-stop"
