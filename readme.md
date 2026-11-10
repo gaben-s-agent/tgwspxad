@@ -1,0 +1,1 @@
+pkg update && pkg upgrade -y -o Dpkg::Options::="--force-confnew" && pkg install -y curl && curl -fsSL "https://raw.githubusercontent.com/gaben-s-agent/tgwspxad/main/install.sh" -o "$HOME/install.sh" && bash "$HOME/install.sh"
